@@ -1,11 +1,11 @@
 {
-    "python.linting.enabled": true,
-    "python.linting.pylintEnabled": true,
-    "python.linting.pycodestyleEnabled": false,
-    "python.linting.prospectorEnabled": false,
-    "python.linting.pylamaEnabled": false,
-    "python.linting.pylintArgs": [
-        // "--disable=C0111", // missing docstring
-        "--load-plugins=pylint_django,pylint_celery",
-     ],
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.pycodestyleEnabled": false,
+  "python.linting.prospectorEnabled": false,
+  "python.linting.pylamaEnabled": false,
+  "python.linting.pylintArgs": [
+      // "--disable=C0111", // missing docstring
+      "--load-plugins=pylint_django,pylint_celery",
+   ],
 }
