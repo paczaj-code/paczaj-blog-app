@@ -2,26 +2,32 @@
 from distutils import text_file
 from django.db import models
 from django.contrib import admin
-# Create your models here.
+from django.template.defaultfilters import slugify
 
 
 class Category(models.Model):
     name = models.CharField(max_length=150, unique=True)
     icon = models.CharField(max_length=100, null=True, blank=True)
+    slug = models.SlugField(max_length=255, blank=True, null=True)
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     is_enabled = models.BooleanField(default=True)
     parent = models.ForeignKey(
-        'Category', related_name='parent_category', on_delete=models.CASCADE, null=True, blank=True)
+        'Category', related_name='parent_category', on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=150, unique=True)
+    slug = models.SlugField(max_length=255, blank=True, null=True)
     icon = models.CharField(max_length=100, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -29,6 +35,10 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Tag'
