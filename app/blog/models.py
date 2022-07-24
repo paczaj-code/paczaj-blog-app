@@ -3,6 +3,7 @@ from distutils import text_file
 from django.db import models
 from django.contrib import admin
 from django.template.defaultfilters import slugify
+# from practice.models import Practice
 
 
 class Category(models.Model):
