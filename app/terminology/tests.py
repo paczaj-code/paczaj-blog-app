@@ -25,11 +25,10 @@ class TerminologyTest(TestCase):
             Term.objects.create(
                 definition=None, description='CORS description')
 
-    def test_update_term_with_missing_definition_raises_error(self):
-        term = Term.objects.first()
-        term.definition = None
+    def test_update_term_with_existing_definition_raises_error(self):
         with self.assertRaises(Exception):
-            term.save()
+            Term.objects.create(
+                definition=Term.objects.first().definition, description='CORS description')
 
     def test_term_update_successfully(self):
         term = Term.objects.first()
