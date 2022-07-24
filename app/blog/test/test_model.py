@@ -1,8 +1,3 @@
-
-from faulthandler import is_enabled
-from nis import cat
-from turtle import title
-from unicodedata import category, name
 from django.test import TestCase
 from blog.models import Post, Category, Tag
 from freezegun import freeze_time
