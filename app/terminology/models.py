@@ -4,7 +4,7 @@ from django.template.defaultfilters import slugify
 
 
 class Term(models.Model):
-    definition = models.CharField(max_length=255, unique=True, )
+    definition = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
