@@ -1,6 +1,7 @@
 #app
 db-data
 commands.txt
+TODO.*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
