@@ -3,8 +3,10 @@ from .views import TermListAPIView, TermDetailAPIViewByPK, TermDetailAPIViewBySl
 
 
 urlpatterns = [
-    path('term/', TermListAPIView.as_view()),
-    path('term/<int:pk>/', TermDetailAPIViewByPK.as_view()),
-    path('term/<str:slug>/', TermDetailAPIViewBySlug.as_view()),
+    path('term/', TermListAPIView.as_view(), name='term-list'),
+    path('term/<int:pk>/', TermDetailAPIViewByPK.as_view(), name='term-detail-id'),
+    path('term/<str:slug>/', TermDetailAPIViewBySlug.as_view(),
+         name='term-detail-slug'),
 
 ]
+app_name = 'terminology'
