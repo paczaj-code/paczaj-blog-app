@@ -1,22 +1,9 @@
 from django.test import TestCase
 from terminology.models import Term
-from freezegun import freeze_time
-import datetime
-from django.core.management import call_command
 
 
-@freeze_time("2022-01-14")
 class TerminologyTest(TestCase):
     fixtures = ['./fixtures/fixtures.json']
-
-    # def setUp(self):
-    #     # term = Term.objects.create(
-    #     #     definition='Co to CORS', description='CORS description')
-    #     call_command(
-    #         'loaddata',
-    #         './../fixtures/fixtures.json',
-    #         verbosity=0
-    #     )
 
     def test_inserted_fixtures(self):
         self.assertEqual(Term.objects.all().count(), 3)
