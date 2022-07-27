@@ -70,3 +70,6 @@ class PublicTerminologyApiTests(TestCase):
         self.assertEqual(res.data['slug'], 'what-is-3')
         self.assertEqual(res.data['description'], 'Term 3 is')
         self.assertEqual(res.data, serializer.data)
+
+
+# TODO podzielić na listę i details i not allowed
