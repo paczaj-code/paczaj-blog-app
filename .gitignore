@@ -2,6 +2,7 @@
 db-data
 commands.txt
 TODO.*
+**/migrations/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
