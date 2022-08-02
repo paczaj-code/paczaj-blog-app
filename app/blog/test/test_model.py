@@ -2,58 +2,58 @@ from django.test import TestCase
 from blog.models import Post, Category, Tag
 
 
-class CategoryTest(TestCase):
-    fixtures = ['./fixtures/fixtures.json']
+# class CategoryTest(TestCase):
+#     fixtures = ['./fixtures/fixtures.json']
 
-    def test_inserted_fixtures(self):
-        self.assertEqual(Category.objects.get(id=1).name, 'Category 1')
-        self.assertEqual(Category.objects.get(id=1).slug, 'category-1')
-        self.assertEqual(Category.objects.get(id=1).is_enabled, True)
-        self.assertEqual(Category.objects.get(id=1).parent, None)
-        self.assertEqual(Category.objects.get(
-            id=1).description, "I'm category 1")
+#     def test_inserted_fixtures(self):
+#         self.assertEqual(Category.objects.get(id=1).name, 'Category 1')
+#         self.assertEqual(Category.objects.get(id=1).slug, 'category-1')
+#         self.assertEqual(Category.objects.get(id=1).is_enabled, True)
+#         self.assertEqual(Category.objects.get(id=1).parent, None)
+#         self.assertEqual(Category.objects.get(
+#             id=1).description, "I'm category 1")
 
-        self.assertEqual(Category.objects.get(id=2).parent.id, 1)
-        self.assertEqual(Category.objects.get(id=3).is_enabled, False)
+#         self.assertEqual(Category.objects.get(id=2).parent.id, 1)
+#         self.assertEqual(Category.objects.get(id=3).is_enabled, False)
 
-    def test_create_category_withot_name_raises_error(self):
-        with self.assertRaises(Exception):
-            Category.objects.create(
-                name=None)
+#     def test_create_category_withot_name_raises_error(self):
+#         with self.assertRaises(Exception):
+#             Category.objects.create(
+#                 name=None)
 
-    def test_create_category_with_existing_name_raises_error(self):
-        with self.assertRaises(Exception):
-            Category.objects.create(
-                name=Category.objects.get(id=1).name)
+#     def test_create_category_with_existing_name_raises_error(self):
+#         with self.assertRaises(Exception):
+#             Category.objects.create(
+#                 name=Category.objects.get(id=1).name)
 
-    def test_create_category_successfull(self):
-        Category.objects.create(
-            name="Category 4", description="I'm category 1", parent=Category.objects.get(id=3))
+#     def test_create_category_successfull(self):
+#         Category.objects.create(
+#             name="Category 4", description="I'm category 1", parent=Category.objects.get(id=3))
 
-        self.assertEqual(Category.objects.all().count(), 4)
-        self.assertEqual(Category.objects.last().name, 'Category 4')
-        self.assertEqual(Category.objects.last().slug, 'category-4')
-        self.assertEqual(Category.objects.last(
-        ).description, "I'm category 1")
-        self.assertEqual(Category.objects.last().parent.id, 3)
+#         self.assertEqual(Category.objects.all().count(), 4)
+#         self.assertEqual(Category.objects.last().name, 'Category 4')
+#         self.assertEqual(Category.objects.last().slug, 'category-4')
+#         self.assertEqual(Category.objects.last(
+#         ).description, "I'm category 1")
+#         self.assertEqual(Category.objects.last().parent.id, 3)
 
-    def test_update_category_successfull(self):
-        category = Category.objects.first()
-        category.name = 'New category'
-        category.description = 'New description'
-        category.is_enabled = False
-        category.parent = Category.objects.get(id=2)
-        category.save()
-        self.assertEqual(Category.objects.first().name, 'New category')
-        self.assertEqual(Category.objects.first().slug, 'new-category')
-        self.assertEqual(Category.objects.first().description,
-                         'New description')
-        self.assertEqual(Category.objects.first().is_enabled, False)
-        self.assertEqual(Category.objects.first().parent.id, 2)
+#     def test_update_category_successfull(self):
+#         category = Category.objects.first()
+#         category.name = 'New category'
+#         category.description = 'New description'
+#         category.is_enabled = False
+#         category.parent = Category.objects.get(id=2)
+#         category.save()
+#         self.assertEqual(Category.objects.first().name, 'New category')
+#         self.assertEqual(Category.objects.first().slug, 'new-category')
+#         self.assertEqual(Category.objects.first().description,
+#                          'New description')
+#         self.assertEqual(Category.objects.first().is_enabled, False)
+#         self.assertEqual(Category.objects.first().parent.id, 2)
 
-    def test_delete_category(self):
-        Category.objects.last().delete()
-        self.assertEqual(Category.objects.all().count(), 2)
+#     def test_delete_category(self):
+#         Category.objects.last().delete()
+#         self.assertEqual(Category.objects.all().count(), 2)
 
 
 class TagTest(TestCase):

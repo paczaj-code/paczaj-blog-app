@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib import admin
-from blog.models import Category, Post
-from django.contrib.auth.models import User
-from django.template.defaultfilters import slugify
+from category.models import Category
+from blog.models import Post
+# from django.contrib.auth.models import User
+# from django.template.defaultfilters import slugify
 
 
 class Practice(models.Model):
@@ -22,7 +23,7 @@ class Practice(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'practice_subject'
+        db_table = 'practice'
 
 
 class Exercise(models.Model):
@@ -34,7 +35,7 @@ class Exercise(models.Model):
         (MEDIUM, "Medium"),
         (DIFFICULT, "Difficult"),
     )
-    title = models.CharField(max_length=255)
+    # title = models.CharField(max_length=255)
     number = models.IntegerField()
     practise = models.ForeignKey(Practice, on_delete=models.CASCADE)
     difficulty = models.CharField(
@@ -46,15 +47,22 @@ class Exercise(models.Model):
     is_published = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        last_number = Exercise.objects.filter(
+            practise=self.practise).aggregate(Max(number))
+
+        if last_number is None:
+            number = 1
+        else:
+            number = last_number + 1
+        # self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'practice_exercise'
+        db_table = 'exercise'
 
     def __str__(self):
         return self.title
 
 
-admin.site.register(Exercise)
-admin.site.register(Practice)
+# admin.site.register(Exercise)
+# admin.site.register(Practice)

@@ -1,0 +1,62 @@
+[
+    {
+        "model": "category.category",
+        "pk": 1,
+        "fields": {
+            "name": "Category 1",
+            "icon": "icon 1",
+            "slug": "category-1",
+            "category_type": "P",
+            "description": "I'm category 1",
+            "created_at": "2022-07-26T05:32:27.823Z",
+            "modified_at": "2022-07-26T05:32:27.823Z",
+            "is_enabled": true,
+            "parent": null
+        }
+    },
+    {
+        "model": "category.category",
+        "pk": 2,
+        "fields": {
+            "name": "Category 2",
+            "icon": "icon 2",
+            "slug": "category-2",
+            "category_type": "P",
+            "description": "I'm category 2",
+            "created_at": "2022-07-26T05:41:51.522Z",
+            "modified_at": "2022-07-26T05:41:51.522Z",
+            "is_enabled": true,
+            "parent": null
+        }
+    },
+    {
+        "model": "category.category",
+        "pk": 3,
+        "fields": {
+            "name": "Category 3",
+            "icon": "icon 3",
+            "slug": "category-3",
+            "category_type": "P",
+            "description": "I'm category 3",
+            "created_at": "2022-07-26T05:41:51.522Z",
+            "modified_at": "2022-07-26T05:41:51.522Z",
+            "is_enabled": false,
+            "parent": 1
+        }
+    },
+    {
+        "model": "category.category",
+        "pk": 4,
+        "fields": {
+            "name": "Category 4",
+            "icon": "icon 4",
+            "slug": "category-4",
+            "category_type": "E",
+            "description": "I'm category 4",
+            "created_at": "2022-07-26T05:41:51.522Z",
+            "modified_at": "2022-07-26T05:41:51.522Z",
+            "is_enabled": false,
+            "parent": null
+        }
+    }
+]

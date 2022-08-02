@@ -20,6 +20,6 @@ from blog import urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('terminology.urls')),
-    path('api/', include('blog.urls')),
+    # path('api/', include('terminology.urls')),
+    # path('api/', include('blog.urls')),
 ]
