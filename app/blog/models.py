@@ -41,13 +41,11 @@ class Post(models.Model):
     tag = models.ManyToManyField(Tag)
     demo_css = models.TextField(null=True, blank=True)
     demo_js = models.TextField(null=True, blank=True)
+    related_articles = models.ManyToManyField('Post')
 # TODO add related posts to Post model
 
     def __str__(self):
         return self.title
-
-    def __unicode__(self):
-        return self.name
 
     class Meta:
         verbose_name = 'Post'
