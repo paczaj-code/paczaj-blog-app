@@ -21,6 +21,21 @@ class CategoryTest(TestCase):
 
         self.assertEqual(Category.objects.get(id=4).category_type, 'E')
 
+    def test_create_category_withot_name_raises_error(self):
+        with self.assertRaises(Exception):
+            Category.objects.create(
+                name=None)
+
+    def test_create_category_with_existing_name_raises_error(self):
+        with self.assertRaises(Exception):
+            Category.objects.create(
+                name=Category.objects.get(id=1).name)
+
+    def test_create_category_withot_category_type_raises_error(self):
+        with self.assertRaises(Exception):
+            Category.objects.create(
+                name='Some', category_type=None)
+
     def test_create_new_category(self):
         Category.objects.create(name='Category 5', category_type='P', icon='icon 5',
                                 description='Category 5 description', parent=Category.objects.get(id=4)
