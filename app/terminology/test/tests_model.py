@@ -1,13 +1,20 @@
 from django.test import TestCase
 from terminology.models import Term
+from category.models import Category
+from django.core.management import call_command
 
 
 class TerminologyTest(TestCase):
-    fixtures = ['./fixtures/fixtures.json']
+    """Test terminology model"""
+    @classmethod
+    def setUpTestData(cls):
+        call_command('loaddata', 'fixtures/fixtures_new.json', verbosity=0)
 
     def test_inserted_fixtures(self):
         self.assertEqual(Term.objects.all().count(), 3)
         self.assertEqual(Term.objects.get(id=1).definition, 'What is 1')
+        self.assertEqual(Term.objects.get(id=1).category,
+                         Category.objects.get(id=1))
         self.assertEqual(Term.objects.get(id=2).definition, 'What is 2')
         self.assertEqual(Term.objects.get(id=3).definition, 'What is 3')
         self.assertEqual(Term.objects.get(id=1).slug, 'what-is-1')
@@ -28,8 +35,8 @@ class TerminologyTest(TestCase):
                 definition='What is 1', description='Some description')
 
     def test_create_term_with_success(self):
-
-        Term.objects.create(definition='What is 4', description='Term 4 is')
+        Term.objects.create(definition='What is 4', description='Term 4 is',
+                            category=Category.objects.get(id=3))
         self.assertEqual(Term.objects.all().count(), 4)
         self.assertEqual(Term.objects.last().definition, 'What is 4')
         self.assertEqual(Term.objects.last().slug, 'what-is-4')
