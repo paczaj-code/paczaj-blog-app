@@ -27,6 +27,7 @@ class CategoryTest(TestCase):
                                 )
         self.assertEqual(Category.objects.count(), 5)
         self.assertEqual(Category.objects.last().name, 'Category 5')
+        self.assertEqual(Category.objects.last().slug, 'category-5')
         self.assertEqual(Category.objects.last().icon, 'icon 5')
         self.assertEqual(Category.objects.last().category_type, 'P')
         self.assertEqual(Category.objects.last().description,
@@ -45,6 +46,7 @@ class CategoryTest(TestCase):
         category.save()
 
         self.assertEqual(Category.objects.get(id=1).name, 'New name')
+        self.assertEqual(Category.objects.get(id=1).slug, 'new-name')
         self.assertEqual(Category.objects.get(id=1).icon, 'new icon')
         self.assertEqual(Category.objects.get(
             id=1).description, 'New description')
