@@ -3,7 +3,8 @@ from django.contrib import admin
 from category.models import Category
 from blog.models import Post
 # from django.contrib.auth.models import User
-# from django.template.defaultfilters import slugify
+from django.template.defaultfilters import slugify
+from django.db.models import Max
 
 
 class Practice(models.Model):
@@ -47,16 +48,16 @@ class Exercise(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True)
 
-    def save(self, *args, **kwargs):
-        last_number = Exercise.objects.filter(
-            practise=self.practise).aggregate(Max(number))
+    # def save(self, *args, **kwargs):
+    #     last_number = Exercise.objects.filter(
+    #         practise=self.practise).aggregate(Max(number))
 
-        if last_number is None:
-            number = 1
-        else:
-            number = last_number + 1
-        # self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
+    #     if last_number is None:
+    #         number = 1
+    #     else:
+    #         number = last_number + 1
+    #     # self.slug = slugify(self.title)
+    #     super().save(*args, **kwargs)
 
     class Meta:
         db_table = 'exercise'
