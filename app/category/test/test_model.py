@@ -20,3 +20,39 @@ class CategoryTest(TestCase):
             id=1).description, "I'm category 1")
 
         self.assertEqual(Category.objects.get(id=4).category_type, 'E')
+
+    def test_create_new_category(self):
+        Category.objects.create(name='Category 5', category_type='P', icon='icon 5',
+                                description='Category 5 description', parent=Category.objects.get(id=4)
+                                )
+        self.assertEqual(Category.objects.count(), 5)
+        self.assertEqual(Category.objects.last().name, 'Category 5')
+        self.assertEqual(Category.objects.last().icon, 'icon 5')
+        self.assertEqual(Category.objects.last().category_type, 'P')
+        self.assertEqual(Category.objects.last().description,
+                         'Category 5 description')
+        self.assertEqual(Category.objects.last().parent,
+                         Category.objects.get(id=4))
+
+    def test_update_category(self):
+        category = Category.objects.get(id=1)
+        category.name = 'New name'
+        category.icon = 'new icon'
+        category.description = 'New description'
+        category.category_type = 'E'
+        category.is_enabled = False
+        category.parent = Category.objects.get(id=2)
+        category.save()
+
+        self.assertEqual(Category.objects.get(id=1).name, 'New name')
+        self.assertEqual(Category.objects.get(id=1).icon, 'new icon')
+        self.assertEqual(Category.objects.get(
+            id=1).description, 'New description')
+        self.assertEqual(Category.objects.get(id=1).category_type, 'E')
+        self.assertEqual(Category.objects.get(id=1).is_enabled, False)
+        self.assertEqual(Category.objects.get(
+            id=1).parent, Category.objects.get(id=2))
+
+    def test_delete_category(self):
+        Category.objects.get(id=3).delete()
+        self.assertEqual(Category.objects.count(), 3)
