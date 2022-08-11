@@ -32,7 +32,8 @@
 			"extensions": [
 				"ms-python.python",
 				"ms-python.vscode-pylance",
-				"Gruntfuggly.todo-tree"
+				"Gruntfuggly.todo-tree",
+				"christherama.django-test-runner"
 			]
 		}
 	},
