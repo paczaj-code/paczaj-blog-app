@@ -1,83 +1,145 @@
 from django.test import TestCase
 from blog.models import Post, Category
-from practice.models import Practice
-from freezegun import freeze_time
-import datetime
-# Create your tests here.
+from practice.models import Practice, Exercise
+from django.core.management import call_command
 
 
-@freeze_time("2022-03-22")
 class PracticeTest(TestCase):
+    """Test practise model"""
+    @classmethod
+    def setUpTestData(cls):
+        call_command('loaddata', 'fixtures/fixtures_new.json', verbosity=0)
 
-    def setUp(self):
+    def test_inserted_fixtures(self):
+        self.assertEqual(Practice.objects.get(id=1).title, 'Practise 1')
+        self.assertEqual(Practice.objects.get(id=1).slug, 'practise-1')
+        self.assertEqual(Practice.objects.get(id=1).slug, 'practise-1')
+        self.assertEqual(Practice.objects.get(
+            id=1).category, Category.objects.get(id=1))
+        self.assertEqual(Practice.objects.get(
+            id=1).description, 'Practise 1 decription')
+        self.assertEqual(Practice.objects.get(id=1).related_posts.count(), 2)
 
-        Category.objects.create(
-            name='Category 1', icon='icon1', description='description 1')
-        Category.objects.create(
-            name='Category 2', icon='icon2', description='description 2', )
+    def test_create_parctise_withot_title_raises_error(self):
+        with self.assertRaises(Exception):
+            Practise.objects.create(
+                title=None)
 
-        Post.objects.create(
-            title='Post 1', category=Category.objects.first(), content='Post 1 content')
-        Post.objects.create(
-            title='Post 2', category=Category.objects.last(), content='Post 2 content')
+    def test_create_parctise_withot_category_raises_error(self):
+        with self.assertRaises(Exception):
+            Practise.objects.create(
+                title='Some', category=None)
 
+    def test_create_parctise_withot_description_raises_error(self):
+        with self.assertRaises(Exception):
+            Practise.objects.create(
+                title='Some', category=Category.objects.get(id=2), description=None)
+
+    def test_create_practise(self):
         Practice.objects.create(
-            name='Practice 1', category=Category.objects.first(),
-            exercise='Exercice 1', solution='Solution exercise 1')
-        Practice.objects.first().related_posts.add(Post.objects.first())
-        Practice.objects.first().related_posts.add(Post.objects.last())
+            title="New practise", category=Category.objects.get(id=2), description="New description",
+            is_published=False
+        )
+        self.assertEqual(Practice.objects.count(), 3)
+        self.assertEqual(Practice.objects.last().title, 'New practise')
+        self.assertEqual(Practice.objects.last().slug, 'new-practise')
+        self.assertEqual(Practice.objects.last().is_published, False)
+        self.assertEqual(Practice.objects.last().description,
+                         'New description')
 
-    def test_create_practice_successfully(self):
-        self.assertEqual(Practice.objects.all().count(), 1)
-        self.assertEqual(Practice.objects.first().name, 'Practice 1')
-        self.assertEqual(Practice.objects.first().slug, 'practice-1')
-        self.assertEqual(Practice.objects.first().exercise, 'Exercice 1')
-        self.assertEqual(Practice.objects.first().category.name, 'Category 1')
-        self.assertEqual(Practice.objects.first().category.slug, 'category-1')
-        self.assertEqual(Practice.objects.first().solution,
-                         'Solution exercise 1')
-        self.assertEqual(
-            Practice.objects.first().related_posts.count(), 2)
-        self.assertEqual(
-            Practice.objects.first().related_posts.first().title, 'Post 1')
-        self.assertEqual(
-            Practice.objects.first().related_posts.last().title, 'Post 2')
-        self.assertEqual(
-            Practice.objects.first().created_at, datetime.datetime(2022, 3, 22, 0, 0, tzinfo=datetime.timezone.utc))
-        self.assertEqual(
-            Practice.objects.last().modified_at, datetime.datetime(2022, 3, 22, 0, 0, tzinfo=datetime.timezone.utc))
+    def test_update_practice(self):
+        practice = Practice.objects.get(id=2)
+        practice.title = 'New title'
+        practice.is_published = True
+        practice.category = Category.objects.get(id=1)
+        practice.related_posts.add(Post.objects.get(id=1))
+        practice.related_posts.add(Post.objects.get(id=2))
+        practice.related_posts.remove(Post.objects.get(id=3))
+        practice.save()
 
-    def test_create_practice_without_name_raises_error(self):
+        self.assertEqual(Practice.objects.get(id=2).title, 'New title')
+        self.assertEqual(Practice.objects.get(id=2).slug, 'new-title')
+        self.assertEqual(Practice.objects.get(id=2).is_published, True)
+        self.assertEqual(Practice.objects.get(id=2).category,
+                         Category.objects.get(id=1))
+        self.assertEqual(Practice.objects.get(id=2).related_posts.count(), 2)
+        self.assertEqual(Practice.objects.get(
+            id=2).related_posts.first(), Post.objects.get(id=1))
+
+    def test_delete_practise(self):
+        Practice.objects.get(id=1).delete()
+        self.assertEqual(Practice.objects.count(), 1)
+
+
+class ExerciseTest(TestCase):
+    """Test exersice model"""
+    @classmethod
+    def setUpTestData(cls):
+        call_command('loaddata', 'fixtures/fixtures_new.json', verbosity=0)
+
+    def test_inserted_fixtures(self):
+        self.assertEqual(Exercise.objects.count(), 2)
+        self.assertEqual(Exercise.objects.get(id=1).number, 1)
+        self.assertEqual(Exercise.objects.get(
+            id=1).practise, Practice.objects.get(id=1))
+        self.assertEqual(Exercise.objects.get(id=1).difficulty, 'E')
+        self.assertEqual(Exercise.objects.get(id=1).exercise, 'Exersise 1')
+        self.assertEqual(Exercise.objects.get(id=1).solution, 'Solution 1')
+        self.assertEqual(Exercise.objects.get(id=1).is_published, True)
+        self.assertEqual(Exercise.objects.get(id=2).is_published, False)
+
+    def test_create_exercise_without_practice_raises_error(self):
         with self.assertRaises(Exception):
-            Practice.objects.create(
-                name=None, category=Category.objects.first(),
-                exercise='Exercice 1', solution='Solution exercise 1')
+            Exercise.objects.create(
+                practise=None)
 
-    def test_create_practice_without_category_raises_error(self):
+    def test_create_exercise_without_difficulty_raises_error(self):
         with self.assertRaises(Exception):
-            Practice.objects.create(
-                name='Some practse', category=None,
-                exercise='Exercice 1', solution='Solution exercise 1')
+            Exercise.objects.create(
+                practise=Practice.objects.get(id=1), difficulty=None)
 
-    def test_update_practise_successfully(self):
-        practise = Practice.objects.first()
-        practise.name = 'New name'
-        practise.exercise = 'New exercise'
-        practise.solution = 'New solution'
-        practise.category = Category.objects.last()
-        practise.related_posts.remove(Post.objects.first())
-        practise.save()
+    def test_create_exercise_without_exercise_raises_error(self):
+        with self.assertRaises(Exception):
+            Exercise.objects.create(
+                practise=Practice.objects.get(id=1), difficulty="M",
+                exercise=None
+            )
 
-        self.assertEqual(Practice.objects.all().count(), 1)
-        self.assertEqual(Practice.objects.first().name, 'New name')
-        self.assertEqual(Practice.objects.first().slug, 'new-name')
-        self.assertEqual(Practice.objects.first().exercise, 'New exercise')
-        self.assertEqual(Practice.objects.first().category.name, 'Category 2')
-        self.assertEqual(Practice.objects.first().category.slug, 'category-2')
-        self.assertEqual(Practice.objects.first().related_posts.count(), 1)
-        self.assertEqual(Practice.objects.first(
-        ).related_posts.first().title, 'Post 2')
+    def test_create_exercise_without_solution_raises_error(self):
+        with self.assertRaises(Exception):
+            Exercise.objects.create(
+                practise=Practice.objects.get(id=1), difficulty="M",
+                exercise='exersice', solution=None
+            )
 
-    def test_delete_practise_successfully(self):
-        Practice.objects.first().delete()
-        self.assertEqual(Practice.objects.all().count(), 0)
+    def test_create_exercise(self):
+        Exercise.objects.create(
+            number=4,
+            practise=Practice.objects.get(id=1), difficulty="M",
+            exercise='exersice', solution='solution'
+        )
+        self.assertEqual(Exercise.objects.count(), 3)
+        self.assertEqual(Exercise.objects.last().number, 4)
+        self.assertEqual(Exercise.objects.last().exercise, 'exersice')
+        self.assertEqual(Exercise.objects.last().solution, 'solution')
+        self.assertEqual(Exercise.objects.last().difficulty, 'M')
+        self.assertEqual(Exercise.objects.last().is_published, True)
+        self.assertEqual(Exercise.objects.last().practise,
+                         Practice.objects.get(id=1))
+
+    def test_update_exercise(self):
+        exercise = Exercise.objects.get(id=2)
+        exercise.number = 100
+        exercise.exercise = 'New exercise'
+        exercise.solution = 'New solution'
+        exercise.is_published = True
+        exercise.save()
+
+        self.assertEqual(Exercise.objects.get(id=2).number, 100)
+        self.assertEqual(Exercise.objects.get(id=2).exercise, 'New exercise')
+        self.assertEqual(Exercise.objects.get(id=2).solution, 'New solution')
+        self.assertEqual(Exercise.objects.get(id=2).is_published, True)
+
+    def test_delete_exercise(self):
+        Exercise.objects.get(id=1).delete()
+        self.assertEqual(Exercise.objects.count(), 1)
