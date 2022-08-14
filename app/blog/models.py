@@ -41,7 +41,7 @@ class Post(models.Model):
     tag = models.ManyToManyField(Tag)
     demo_css = models.TextField(null=True, blank=True)
     demo_js = models.TextField(null=True, blank=True)
-    related_articles = models.ManyToManyField('Post')
+    related_posts = models.ManyToManyField('Post', blank=True)
 
     def __str__(self):
         return self.title
