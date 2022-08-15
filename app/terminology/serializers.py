@@ -1,14 +1,14 @@
-# from rest_framework import serializers
-# from .models import Term
+from rest_framework import serializers
+from .models import Term
 
 
-# class PublicTermListSerialzer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Term
-#         fields = ['id', 'definition',  'slug']
+class PublicTermListSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = Term
+        fields = ['id', 'definition',  'slug']
 
 
-# class PublicTermDetailSerializer(PublicTermListSerialzer):
-#     class Meta:
-#         model = Term
-#         fields = PublicTermListSerialzer.Meta.fields + ['description']
+class PublicTermDetailSerializer(PublicTermListSerialzer):
+    class Meta:
+        model = Term
+        fields = PublicTermListSerialzer.Meta.fields + ['description']
