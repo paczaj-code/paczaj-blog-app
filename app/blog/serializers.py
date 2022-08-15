@@ -2,7 +2,7 @@ from rest_framework import serializers
 from collections import OrderedDict
 from blog.models import Tag, Post
 from category.serializers import PublicCategoryDetailSerializer
-
+import json
 
 """-----------------Tag serializers begin----------------------"""
 
@@ -25,16 +25,33 @@ class TagSerializer(serializers.ModelSerializer):
 """-----------------Post serializers begin ----------------------"""
 
 
+class JSONSerializerField(serializers.Field):
+    """Serializer for JSONField -- required to make field writable"""
+
+    def to_representation(self, value):
+        json_data = {}
+        try:
+            json_data = json.loads(value)
+        except ValueError as e:
+            raise e
+        finally:
+            return json_data
+
+    def to_internal_value(self, data):
+        return json.dumps(data)
+
+
 class BasicPostSerializer(serializers.ModelSerializer):
     """Serializer template for post to be inherited"""
     created_at = serializers.DateTimeField(format='%d-%m-%Y')
     modified_at = serializers.DateTimeField(format='%d-%m-%Y')
     tag = TagSerializer(many=True, read_only=True)
+    image = JSONSerializerField()
 
     class Meta:
         model = Post
         fields = ['id', 'title', 'slug', 'created_at',
-                  'modified_at', 'tag']
+                  'modified_at', 'tag', 'image']
 
     def to_representation(self, instance):
         """Clean of empty values and add count of subcategories"""
