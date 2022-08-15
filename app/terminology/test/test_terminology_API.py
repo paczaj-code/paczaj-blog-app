@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 from terminology.models import Term
 from terminology.serializers import PublicTermDetailSerializer, PublicTermListSerialzer
-
+from django.core.management import call_command
 TERMINOLOGY_URL = reverse('terminology:term-list')
 
 
@@ -18,7 +18,9 @@ def detail_slug_url(term_slug):
 
 class PublicTerminologyApiTests(TestCase):
     """Test public terminology  API endpoints."""
-    fixtures = ['./fixtures/fixtures.json']
+    @classmethod
+    def setUpTestData(cls):
+        call_command('loaddata', 'fixtures/fixtures_api.json', verbosity=0)
 
     def setUp(self):
         self.client = APIClient()
@@ -70,6 +72,3 @@ class PublicTerminologyApiTests(TestCase):
         self.assertEqual(res.data['slug'], 'what-is-3')
         self.assertEqual(res.data['description'], 'Term 3 is')
         self.assertEqual(res.data, serializer.data)
-
-
-# TODO podzielić na listę i details i not allowed
