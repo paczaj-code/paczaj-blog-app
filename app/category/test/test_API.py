@@ -7,12 +7,12 @@ from django.core.management import call_command
 CATEGORY_URL = reverse('category:category-list')
 
 
-def detail_url_by_id(category_id):
+def category_detail_url_by_id(category_id):
     """Create and return a recipe detail URL."""
     return reverse('category:category-by-id', args=[category_id])
 
 
-def detail_url_by_slug(category_slug):
+def category_detail_url_by_slug(category_slug):
     """Create and return a recipe detail URL."""
     return reverse('category:category-by-slug', args=[category_slug])
 
@@ -22,6 +22,9 @@ class PublicCategoryListAPITests(TestCase):
     @classmethod
     def setUpTestData(cls):
         call_command('loaddata', 'fixtures/fixtures_api.json', verbosity=0)
+
+    def setUp(self):
+        self.client = APIClient()
 
     def test_method_post_not_allowed(self):
         res = self.client.post(CATEGORY_URL)
@@ -59,31 +62,31 @@ class PublicCategoryDetailAPITests(TestCase):
         call_command('loaddata', 'fixtures/fixtures_api.json', verbosity=0)
 
     def test_method_post_not_allowed(self):
-        url = detail_url_by_id(1)
+        url = category_detail_url_by_id(1)
         res = self.client.post(url)
         # res = self.client.post(CATEGORY_URL)
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_method_put_not_allowed(self):
-        url = detail_url_by_id(1)
+        url = category_detail_url_by_id(1)
         res = self.client.put(url)
         # res = self.client.post(CATEGORY_URL)
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_method_patch_not_allowed(self):
-        url = detail_url_by_id(1)
+        url = category_detail_url_by_id(1)
         res = self.client.patch(url)
         # res = self.client.post(CATEGORY_URL)
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_method_delete_not_allowed(self):
-        url = detail_url_by_id(1)
+        url = category_detail_url_by_id(1)
         res = self.client.delete(url)
         # res = self.client.post(CATEGORY_URL)
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_result_detail_category_by_id(self):
-        url = detail_url_by_id(1)
+        url = category_detail_url_by_id(1)
         res = self.client.get(url)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data['id'], 1)
@@ -92,7 +95,7 @@ class PublicCategoryDetailAPITests(TestCase):
         self.assertEqual(res.data['slug'], 'bazy-danych')
 
     def test_result_detail_category_by_slug(self):
-        url = detail_url_by_slug('mongodb')
+        url = category_detail_url_by_slug('mongodb')
         res = self.client.get(url)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data['id'], 3)
