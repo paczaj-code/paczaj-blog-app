@@ -1,4 +1,3 @@
-
 from distutils import text_file
 from django.db import models
 from django.contrib import admin
