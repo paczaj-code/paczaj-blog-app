@@ -75,7 +75,7 @@ class PostTest(TestCase):
                             content='New content', category=Category.objects.get(id=3))
         Post.objects.last().tag.add(Tag.objects.last())
         Post.objects.last().tag.add(Tag.objects.first())
-        Post.objects.last().related_articles.add(Post.objects.get(id=1))
+        Post.objects.last().related_posts.add(Post.objects.get(id=1))
 
         self.assertEqual(Post.objects.all().count(), 4)
         self.assertEqual(Post.objects.last().title, 'New title')
@@ -85,7 +85,7 @@ class PostTest(TestCase):
         self.assertEqual(Post.objects.last().tag.count(), 2)
         self.assertEqual(Post.objects.last().tag.first().id, 1)
         self.assertEqual(Post.objects.last().tag.last().id, 3)
-        self.assertEqual(Post.objects.last().related_articles.last().id, 1)
+        self.assertEqual(Post.objects.last().related_posts.last().id, 1)
 
     def test_update_post_success(self):
         post = Post.objects.last()
@@ -96,7 +96,7 @@ class PostTest(TestCase):
         post.tag.remove(Tag.objects.get(id=1))
         post.tag.add(Tag.objects.get(id=2))
         post.tag.add(Tag.objects.get(id=3))
-        post.related_articles.remove(Post.objects.get(id=1))
+        post.related_posts.remove(Post.objects.get(id=1))
         post.save()
         self.assertEqual(Post.objects.last().title, 'Post 55')
         self.assertEqual(Post.objects.last().slug, 'post-55')
@@ -104,7 +104,7 @@ class PostTest(TestCase):
         self.assertEqual(Post.objects.last().is_published, False)
         self.assertEqual(Post.objects.last().category.id, 3)
         self.assertEqual(Post.objects.last().tag.count(), 2)
-        self.assertEqual(Post.objects.last().related_articles.count(), 1)
+        self.assertEqual(Post.objects.last().related_posts.count(), 1)
 
     def test_delete_post_successfull(self):
         Post.objects.last().delete()
