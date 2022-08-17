@@ -1,3 +1,4 @@
+from faulthandler import is_enabled
 from rest_framework import serializers
 from collections import OrderedDict
 from .models import Category
@@ -34,7 +35,12 @@ class PublicCategoryListSerializer(BasicCategorySerializer):
     def get_fields(self):
         fields = super(PublicCategoryListSerializer, self).get_fields()
         fields['subcategories'] = PublicCategoryListSerializer(many=True)
+        # fields = Category.objects.filter(is_enabled=True)
         return fields
+
+    # def get_subcategories(self, obj):
+    #     queryset = Category.objects.filter(subcategory__is_enabled=True)
+    #     return PublicCategoryDetailSerializer(queryset, many=True)
 
 
 class PublicCategoryDetailSerializer(BasicCategorySerializer):
