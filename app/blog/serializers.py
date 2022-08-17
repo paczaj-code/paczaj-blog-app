@@ -86,6 +86,3 @@ class PostDetailByPostIdOrSlug(serializers.Serializer):
 
 
 # """-----------------Post serializers end ----------------------"""
-
-
-# TODO dodać obrazki przy zapisywaniu
